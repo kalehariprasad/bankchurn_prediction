@@ -14,6 +14,6 @@ def save_data(data, output_path):
         csv_file_path = os.path.join(output_path, 'data.csv')
         data.to_csv(csv_file_path , index=False)
         
-        logging.info(f'{data}sved at {output_path} ')
+        logging.info(f'Data saved at {csv_file_path}')
     except Exception as e:
         raise CustomException(e,sys)

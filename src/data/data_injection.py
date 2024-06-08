@@ -49,15 +49,6 @@ class DataInjection:
         except Exception as e:
             raise CustomException(e,sys)
 
-    def save_data(self, train, test, output_path):
-        try:
-            # Save the split datasets to the specified output path
-            pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
-            train.to_csv(output_path + '/train.csv', index=False)
-            test.to_csv(output_path + '/test.csv', index=False)
-            logging.info('train and test data saved to data?externel ')
-        except Exception as e:
-            raise CustomException(e,sys)
 
 if __name__ == "__main__":
     data_injection = DataInjection()
