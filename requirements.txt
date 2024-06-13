@@ -19,3 +19,4 @@ scikit-learn
 imblearn
 plotly
 dvclive
+pickle5
