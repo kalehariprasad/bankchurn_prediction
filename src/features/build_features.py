@@ -44,7 +44,9 @@ class featurebuilding:
             creditscore_bins = [0, 580, 670,740,800,851]
             creditscore_labels = ['Poor', 'Fair', 'Good' , 'Very_Good' , 'Exceptional']
             df['Credit_group'] = pd.cut(df['CreditScore'], bins=creditscore_bins, labels=creditscore_labels, right=False)
-            df.drop('CreditScore',inplace=True,axis=1)
+            df.drop(columns=['RowNumber','CustomerId','Surname','CreditScore'],inplace=True,axis=1)  
+            df.dropna(inplace=True) 
+            print(df.isnull().sum())
             logging.info('binning compleeted and dropped crediscore column')
             return df
         except Exception as e:
@@ -54,7 +56,7 @@ class featurebuilding:
         try:   
             logging.info('started applying datatype change and binning both on a data frame')  
             df_type_change = self.datatype_change(df)
-            data = self.binning(df)  # Apply binning after datatype change
+            data = self.binning(df_type_change)  # Apply binning after datatype change
             logging.info('compleeted applying datatype change and binning both on a data frame') 
             return data
         except Exception as e:

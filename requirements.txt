@@ -16,5 +16,6 @@ numpy
 matplotlib
 seaborn
 scikit-learn
+imblearn
 plotly
 dvclive
