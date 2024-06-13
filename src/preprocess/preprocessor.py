@@ -12,6 +12,8 @@ from src.exception import CustomException
 from src.logging import logging
 from src.utils import save_data,save_object
 from dvclive import Live
+from src.models.train_model import modelTraining
+from src.models.predict_model import Predict
 
 
 class PreprocessrConfig:
@@ -75,18 +77,18 @@ class Preprocessing:
 
             transformed_train_X = preprocesser.fit_transform(train_X)
 
-            save_object(preprocesser,self.PreprocessingConfig.preprocessor_object)
+            #save_object(preprocesser,self.PreprocessingConfig.preprocessor_object)
             logging.info(f'preprocessing compleeted and stored pickle file in :{self.PreprocessingConfig.preprocessor_object}')
-            print('transformed_train_X_shape is : ', transformed_train_X.shape)
-            print('train_y shape is ',train_y.shape)
+            #print('transformed_train_X_shape is : ', transformed_train_X.shape)
+            #print('train_y shape is ',train_y.shape)
             
             transformed_test_X = preprocesser.transform(test_X)
       
             resampler = SMOTE()
             transformed_train_X_resampled, train_y_resampled = resampler.fit_resample(transformed_train_X, train_y)
           
-            print('transformed_train_X_resampled_shape is :', transformed_train_X_resampled.shape)
-            print('train_y_resampled shape is :' ,train_y_resampled.shape)
+            #print('transformed_train_X_resampled_shape is :', transformed_train_X_resampled.shape)
+            #print('train_y_resampled shape is :' ,train_y_resampled.shape)
 
             # Convert arrays to DataFrames
             logging.info('started converting transformed arrays to dataframes')
@@ -97,8 +99,8 @@ class Preprocessing:
             df_test['Exited'] = test_y  
             logging.info('compleetd converting transformed arrays to dataframes')
 
-            save_data(df_train_resampled,self.PreprocessingConfig.output_train_path)
-            save_data(df_test,self.PreprocessingConfig.output_test_path)
+            #save_data(df_train_resampled,self.PreprocessingConfig.output_train_path)
+            #save_data(df_test,self.PreprocessingConfig.output_test_path)
             logging.info(f'transformed train data is stored at:{self.PreprocessingConfig.output_train_path}')
             logging.info(f'transformed test data is stored at:{self.PreprocessingConfig.output_test_path}')
        
@@ -116,7 +118,10 @@ class Preprocessing:
 if __name__ == "__main__":
     df=pd.read_csv('C:\\Users\\Hariprasad\\Documents\\bankchurn_prediction\\data\\interim\\train\\data.csv')
     pre= Preprocessing()
+    model=modelTraining()
+    prediction=Predict()
     transformed_train_X_resampled, train_y_resampled, transformed_test_X, test_y=pre.initiate_preprocess(df)
-
+    model.training( transformed_train_X_resampled, train_y_resampled)
+    prediction.predict(transformed_test_X, test_y)
 
  

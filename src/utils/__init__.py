@@ -20,16 +20,30 @@ def save_data(data, output_path):
     
 def save_object(obj, file_path, file_extension='pkl'):
     try:
-        
-        file_path_with_extension = f"{file_path}.{file_extension}"
-
+        file_path_with_extension = f"{file_path}.pkl"
         dir_path = os.path.dirname(file_path_with_extension)
-        os.makedirs(dir_path, exist_ok=True)
-
+        os.makedirs(dir_path, exist_ok=True) 
         with open(file_path_with_extension, "wb") as file_obj:
             pickle.dump(obj, file_obj)
         
+      
         logging.info(f'Object saved at {file_path_with_extension}')
 
     except Exception as e:
-        raise CustomException(e,sys)
+        raise CustomException(e, sys)
+
+
+def read_object(file_path):
+    try:
+        with open(file_path, "rb") as file_obj:
+            obj = pickle.load(file_obj)
+        
+        logging.info(f'Object read from {file_path}')
+        
+        return obj
+
+    except Exception as e:
+        raise CustomException(e, sys)
+
+
+
