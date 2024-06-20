@@ -2,7 +2,7 @@ import os,sys
 import pathlib
 import yaml
 from src.exception import CustomException
-from src.logging import logging
+from src.logging.my_logging import logging
 from src.utils import save_object
 from sklearn.ensemble import RandomForestClassifier,BaggingClassifier,AdaBoostClassifier
 
@@ -27,7 +27,7 @@ class modelTraining:
         except Exception as e:
             raise CustomException(e,sys)
 
-   
-  
-
+if __name__=="main":
+    model=modelTraining()
+    model.training( transformed_train_X_resampled, train_y_resampled)
 

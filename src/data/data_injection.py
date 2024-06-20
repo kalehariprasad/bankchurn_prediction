@@ -18,8 +18,8 @@ class DataInjectionConfig:
     params = yaml.safe_load(open(params_file))["make_dataset"]
 
     data_path = home_dir.as_posix() + '/data/raw/Churn_Modelling.csv'
-    output_train_path = home_dir.as_posix() + '/data/external/train.csv'
-    output_test_path = home_dir.as_posix() + '/data/external/test.csv'
+    output_train_path = home_dir.as_posix() + '/data/external/train'
+    output_test_path = home_dir.as_posix() + '/data/external/test'
     
 
 class DataInjection:
