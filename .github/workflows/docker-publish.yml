@@ -1,0 +1,27 @@
+name: Build and Run Streamlit App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t my-streamlit-app .
+
+      - name: Run Docker container
+        run: docker run -d -p 8501:8501 my-streamlit-app
+
+      - name: Wait for Streamlit to start
+        run: sleep 20  # Adjust sleep time as needed depending on your app startup time
+
+      - name: Access Streamlit web page
+        run: curl -s http://localhost:8501
