@@ -1,6 +1,11 @@
 # Use an official Python runtime as a parent image
 FROM python:3.10-slim
 
+# Install build dependencies
+RUN apt-get update && \
+    apt-get install -y gcc && \
+    rm -rf /var/lib/apt/lists/*
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -15,3 +20,4 @@ EXPOSE 8501
 
 # Run app.py when the container launches
 CMD ["streamlit", "run", "app.py"]
+
