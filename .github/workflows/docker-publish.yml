@@ -1,57 +1,62 @@
-name: Build and Run Streamlit App
+name: CI Pipeline
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   integration:
+    name: Continuous Integration
     runs-on: ubuntu-latest
     steps:
-      -name: checkoutcode 
-      -uses: actions/checkout@v3
-      
-      -name: linting code
-      -uses: echo"linting Repository"
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      -name: Run unitTest
-      -uses: echo "Running Unit Test"
+      - name: Lint code
+        run: echo "Linting repository"
 
-  build & push Docker to Ecr:
-    name : Push to ECR
+      - name: Run unit tests
+        run: echo "Running unit tests"
+
+  build-and-push-ecr-image:
+    name: Push to ECR
     needs: integration
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: utilities
-        run: | 
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Utilities
+        run: |
           sudo apt-get update
           sudo apt-get install -y jq unzip
-      
-      - name: configure aws Actions
-        uses : aws-actions/configure-aws-credentials@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-acccess-key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws-secret-access_key: ${{secrets.AWS_ACCESS_KEY}}
-          aws-region: ${{secrets.REGION}}
-      - name: login to ECR
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-action/amazon-ecr-login@v2
+        uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build Docker image and push  to ECR
-        id: build image
-        env: 
-          ECR_URI: ${{secrets.AWS_ECR_URI}}
-          ECR_REGISTRY: ${{secrets.AWS_ECR_REPOSITORY}}
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           IMAGE_TAG: latest
-
-        run: docker build -t $ECR_URI/$ECR_REGISTRY:$IMAGE_TAG .
-        run: docker push  $ECR_URI/$ECR_REGISTRY:$IMAGE_TAG 
-        
-
-
-
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
