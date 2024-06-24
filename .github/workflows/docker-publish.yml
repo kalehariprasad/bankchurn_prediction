@@ -7,21 +7,52 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      -name: checkoutcode 
+      -uses: actions/checkout@v3
+      
+      -name: linting code
+      -uses: echo"linting Repository"
+
+      -name: Run unitTest
+      -used: echo "Running Unit Test"
+
+  build & push Docker to Ecr:
+    name : Push to ECR
+    needs: integration
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: utilities
+        run: | 
+          sudo apt-get update
+          sudo apt-get install -y jq unzip
+      
+      - name: configure aws Actions
+        uses : aws-actions/configure-aws-credentials@v4
+        with:
+          aws-acccess-key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access_key: ${{secrets.AWS_ACCESS_KEY}}
+          aws-region: ${{secrets.REGION}}
+      - name: login to ECR
+        id: login-ecr
+        uses: aws-action/amazon-ecr-login@v2
 
-      - name: Build Docker image
-        run: docker build -t my-streamlit-app .
+      - name: Build Docker image and push  to ECR
+        id: build image
+        env: 
+          ECR_URI: ${{secrets.AWS_ECR_URI}}
+          ECR_REGISTRY: ${{secrets.AWS_ECR_REPOSITORY}}
+          IMAGE_TAG: latest
 
-      - name: Run Docker container
-        run: docker run -d -p 8501:8501 my-streamlit-app
+        run: docker build -t $ECR_URI/$ECR_REGISTRY:$IMAGE_TAG .
+        run: docker push  $ECR_URI/$ECR_REGISTRY:$IMAGE_TAG 
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        
 
-      - name: Wait for Streamlit to start
-        run: sleep 20  # Adjust sleep time as needed depending on your app startup time
 
-      - name: Access Streamlit web page
-        run: curl -s http://localhost:8501
+
