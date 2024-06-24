@@ -17,7 +17,7 @@ jobs:
       -uses: echo"linting Repository"
 
       -name: Run unitTest
-      -used: echo "Running Unit Test"
+      -uses: echo "Running Unit Test"
 
   build & push Docker to Ecr:
     name : Push to ECR
@@ -51,7 +51,6 @@ jobs:
 
         run: docker build -t $ECR_URI/$ECR_REGISTRY:$IMAGE_TAG .
         run: docker push  $ECR_URI/$ECR_REGISTRY:$IMAGE_TAG 
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         
 
 
