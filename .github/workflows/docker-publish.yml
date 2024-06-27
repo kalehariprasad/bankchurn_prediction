@@ -88,6 +88,7 @@ jobs:
           docker rm -f bankchurn || true
       - name: Run Docker Image to serve users
         run: |
-          docker run --rm -d -p 8080:80 $ECR_REGISTRY_URI/$ECR_REPOSITORY:$IMAGE_TAG
+          docker run -d -p 8501:8501 --name bankchurn-app $ECR_REGISTRY_URI/$ECR_REPOSITORY:$IMAGE_TAG
+          
 
             
