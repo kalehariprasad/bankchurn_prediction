@@ -5,12 +5,11 @@ import pathlib
 import streamlit as st
 
 
-curr_dir = pathlib.Path(__file__)
-home_dir = curr_dir.parent.parent.parent
 
 
-model_path = home_dir.as_posix() + 'models/model.pkl'
-preprocer=home_dir.as_posix() + 'models\preprocessor.pkl'
+
+model_path = 'models/model.pkl'
+preprocer='models/preprocessor.pkl'
 
 # Load the pickled model
 with open(model_path, 'rb') as f:

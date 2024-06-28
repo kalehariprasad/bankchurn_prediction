@@ -2,7 +2,7 @@ import os,sys
 import pathlib
 import yaml
 from src.exception import CustomException
-from src.logging.my_logging import logging
+from src.logging import logging
 from src.utils import save_object
 from sklearn.ensemble import RandomForestClassifier,BaggingClassifier,AdaBoostClassifier
 

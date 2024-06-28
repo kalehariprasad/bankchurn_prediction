@@ -23,7 +23,7 @@ class PreprocessrConfig:
     test_data_path = home_dir.as_posix() + '/data/interim/test/data.csv'
     output_train_path = home_dir.as_posix() + '/data/processed/train'
     output_test_path = home_dir.as_posix() + '/data/processed/test'
-    preprocessor_object=home_dir.as_posix() + '/data/objects/preprocessor'
+    preprocessor_object=home_dir.as_posix() + '/models/preprocessor'
 class Preprocessing:
     def __init__(self):
         self.PreprocessingConfig = PreprocessrConfig()
