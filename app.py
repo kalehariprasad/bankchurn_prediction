@@ -9,7 +9,7 @@ import streamlit as st
 
 
 model_path = 'models/model.pkl'
-preprocer='data\objects\preprocessor.pkl'
+preprocer='models\preprocessor.pkl'
 
 # Load the pickled model
 with open(model_path, 'rb') as f:
