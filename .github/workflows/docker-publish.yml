@@ -88,6 +88,7 @@ jobs:
           docker rm -f bankchurn || true
       - name: Run Docker Image to serve users
         run: |
-          docker run -d -p 8501:8501 --ipc="host" --name=bankchurn \$ECR_REGISTRY_URI/$ECR_REPOSITORY:$IMAGE_TAG
+          docker run -d -p 8080:8080 --ipc="host" --name=bankchurn -e 'aws-access-key-id=${{ secrets.AWS_ACCESS_KEY_ID }}' -e 'aws-secret-access-key=${{ secrets.AWS_ACCESS_KEY }}' -e 'aws_region=${{ secrets.REGION }}'  ${{secrets.ECR_REGISTRY_URI}}/${{ secrets.ECR_REPOSITORYE }}:latest
+          
 
             
