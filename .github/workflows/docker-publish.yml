@@ -88,7 +88,7 @@ jobs:
           docker rm -f bankchurn || true
       - name: Run Docker Image to serve users
         run: |
-          docker run -d -p 8051:8051 ${{secrets.ECR_REGISTRY_URI}}/${{ secrets.ECR_REPOSITORYE }}:latest
+          docker run it -d -p 8051:8051 ${{secrets.ECR_REGISTRY_URI}}/${{ secrets.ECR_REPOSITORYE }}:latest
           
 
             
