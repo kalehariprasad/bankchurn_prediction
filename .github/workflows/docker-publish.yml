@@ -57,38 +57,3 @@ jobs:
           docker build -t $ECR_REGISTRY_URI/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY_URI/$ECR_REPOSITORY:latest
           echo "::set-output name=image::$ECR_REGISTRY_URI/$ECR_REPOSITORY:latest"
-
-  deployment:
-    name: Continuous Deployment
-    needs: build-and-push-ecr-image
-    runs-on: ubuntu-latest
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-region: ${{ secrets.REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Pull image from Amazon ECR
-        id: pull-image
-        env:
-          ECR_REGISTRY_URI: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
-          IMAGE_TAG: latest
-        run: |
-          docker pull $ECR_REGISTRY_URI/$ECR_REPOSITORY:$IMAGE_TAG
-
-      - name: Delete previous container
-        run: |
-          docker rm -f bankchurn || true
-      - name: Run Docker Image to serve users
-        run: |
-          docker run it -d -p 8051:8051 ${{secrets.ECR_REGISTRY_URI}}/${{ secrets.ECR_REPOSITORYE }}:latest
-          
-
-            
